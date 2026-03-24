@@ -1,4 +1,5 @@
 const tiles = document.querySelectorAll(".game-tile");
+const gameBoard = document.querySelector(".game-board");
 
 let selectedTile = null;
 
@@ -33,4 +34,15 @@ tiles.forEach((tile, index) => {
     event.preventDefault();
     tile.click();
   });
+});
+
+// Deselect game tile
+document.addEventListener("click", (event) => {
+  if (!selectedTile || gameBoard?.contains(event.target)) {
+    return;
+  }
+
+  selectedTile.classList.remove("is-selected");
+  selectedTile.setAttribute("aria-pressed", "false");
+  selectedTile = null;
 });
