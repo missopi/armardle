@@ -5,6 +5,8 @@
   font-size: 16px;
   --armadle-icon: url('../assets/armadle.svg');
   --color-background: #8cacd3;
+  --settings-cog-color: #222222;
+  --empty-tile-color: #cbcdd1;
 
   /* Spacing variables */
   --vertical-spacing-0-5: 4px;
