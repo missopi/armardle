@@ -6,9 +6,6 @@
   --armadle-icon: url('../assets/armadle.svg');
   --color-background: #8cacd3;
   --settings-cog-color: #222222;
-  --empty-tile-color: #89acd7;
-  --empty-tile-bg-color: #acc7e8;
-  --selected-tile-bg-color: #bed4ee;
 
   /* Spacing variables */
   --vertical-spacing-0-5: 4px;
@@ -24,4 +21,15 @@
   /* Button styles */
   --bg-btn-primary: #000000;
   --text-btn-primary: #ffffff;
+
+  /* Game tile styles */
+  --empty-tile-color: #89acd7;
+  --empty-tile-bg-color: #acc7e8;
+  --selected-tile-bg-color: #bed4ee;
+  --near-tile-color: #89cfd7;
+  --near-tile-bg-color: #ace1e7;
+  --miss-tile-color: #a5a5a5;
+  --miss-tile-bg-color: #e4e4e4;
+  --hit-tile-color: #be2a2a;
+  --hit-tile-bg-color: #c03939;
 }
