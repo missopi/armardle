@@ -1,6 +1,5 @@
 const tiles = Array.from(document.querySelectorAll(".game-tile"));
 const gameBoard = document.querySelector(".game-board");
-const fireButton = document.querySelector("#fire-button");
 
 const dailyLocations = window.ArmadleGameLogic.getDailyTargetLocations(); // Ship locations for that day.
 
@@ -28,31 +27,10 @@ function isTileLocked(tile) {
   return firedTileIndexes.has(Number(tile.dataset.index));
 }
 
-// Fire button enabled/disabled.
-function updateFireButtonState() {
-  if (!fireButton) {
-    return;
-  }
-
-  const hasSelectedTile = Boolean(selectedTile);
-  const selectedTileIndex = hasSelectedTile ? Number(selectedTile.dataset.index) : null;
-  const hasAlreadyFiredAtTile =
-    selectedTileIndex !== null && firedTileIndexes.has(selectedTileIndex);
-
-  fireButton.disabled = !hasSelectedTile || hasAlreadyFiredAtTile;
-}
-
 // Select or deselect a clicked tile.
 function selectTile(tile) {
   if (isTileLocked(tile)) {
     clearSelectedTile();
-    updateFireButtonState();
-    return;
-  }
-
-  if (selectedTile === tile) {
-    clearSelectedTile();
-    updateFireButtonState();
     return;
   }
 
@@ -60,7 +38,6 @@ function selectTile(tile) {
   tile.classList.add("is-selected");
   tile.setAttribute("aria-pressed", "true");
   selectedTile = tile;
-  updateFireButtonState();
 }
 
 // Fire at selected tile and record if its a hit or miss.
@@ -72,7 +49,6 @@ function fireAtSelectedTile() {
   const tileIndex = Number(selectedTile.dataset.index);
 
   if (firedTileIndexes.has(tileIndex)) {
-    updateFireButtonState();
     return;
   }
 
@@ -84,7 +60,21 @@ function fireAtSelectedTile() {
   selectedTile.setAttribute("tabindex", "-1");
 
   clearSelectedTile();
-  updateFireButtonState();
+}
+
+// Fire at selected tile if tile is already selected
+function activateTile(tile) {
+  if (isTileLocked(tile)) {
+    clearSelectedTile();
+    return;
+  }
+
+  if (selectedTile === tile) {
+    fireAtSelectedTile();
+    return;
+  }
+
+  selectTile(tile);
 }
 
 // Give each tile an ID and make accessible by mouse/keyboard.
@@ -97,7 +87,7 @@ tiles.forEach((tile, index) => {
   tile.setAttribute("aria-label", `Tile ${index + 1}`);
 
   tile.addEventListener("click", () => {
-    selectTile(tile);
+    activateTile(tile);
   });
 
   tile.addEventListener("keydown", (event) => {
@@ -106,25 +96,8 @@ tiles.forEach((tile, index) => {
     }
 
     event.preventDefault();
-    selectTile(tile);
+    activateTile(tile);
   });
-});
-
-// Fire button logic
-fireButton?.addEventListener("click", fireAtSelectedTile);
-
-// Allow user to press enter key to fire
-document.addEventListener("keydown", (event) => {
-  if (event.key !== "Enter" || !selectedTile) {
-    return;
-  }
-
-  if (document.activeElement === fireButton) {
-    return;
-  }
-
-  event.preventDefault();
-  fireAtSelectedTile();
 });
 
 // Clicking away deselects tile
@@ -143,7 +116,4 @@ document.addEventListener("click", (event) => {
   }
 
   clearSelectedTile();
-  updateFireButtonState();
 });
-
-updateFireButtonState();
