@@ -17,6 +17,7 @@
   --header-toolbar-height: 50px;
   --header-padding-x: var(--horizontal-spacing-2);
   --game-max-width: 500px;
+  --board-width: min(320px, 100vw);
 
   /* Button styles */
   --bg-btn-primary: #000000;
@@ -45,5 +46,12 @@
   --alive-color:#6ba987;
   --alive-bg-color:#86c69c;
 }
+
+@media (min-width: 768px) {
+  :root {
+    --board-width: 360px;
+  }
+}
+
 
 

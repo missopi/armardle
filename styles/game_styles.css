@@ -117,7 +117,7 @@ header {
   grid-gap: 2px;
   padding: 2px;
   box-sizing: border-box;
-  min-width: min(300px, 100vw);
+  width: var(--board-width);
 }
 
 .game-row {
@@ -208,22 +208,17 @@ header {
   }
 }
 
-@media (min-width: 768px) {
-  .game-board {
-    min-width: 360px;
-  }
-}
-
-
 /* Action Button Styles */
 
 .game-actions-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex-grow: 1;
-  overflow: hidden;
+  gap: 16px;
+  width: var(--board-width);
+  margin: 0 auto;
 }
 
 .game-action-row {
@@ -264,17 +259,10 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-grow: 1;
-  overflow: hidden;
-  margin: 10px;
-}
-
-.ships-panel-target {
-  justify-content: flex-start;
-}
-
-.ships-panel-mine {
-  justify-content: flex-end;
+  flex: 1 1 0;
+  justify-content: center;
+  min-width: 0;
+  margin-top: 20px;
 }
 
 .fleet {
@@ -283,7 +271,7 @@ header {
   grid-gap: 2px;
   padding: 2px;
   box-sizing: border-box;
-  width: min(120px, 100vw);
+  width: min(130px, 100vw);
 }
 
 .fleet-target {
