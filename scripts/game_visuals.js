@@ -3,8 +3,13 @@ const THEME_STORAGE_KEY = "armadle-game-theme";
 const tiles = Array.from(document.querySelectorAll(".game-tile"));
 const gameBoard = document.querySelector(".game-board");
 
-// Create array of fleet-mine ship tiles
+// Array of fleet-mine ship tiles
 const mineFleetShips = Array.from(document.querySelectorAll(".fleet-mine .ship")).map(
+  (ship) => Array.from(ship.querySelectorAll(".ship-tile")),
+);
+
+// Array of fleet-target ship tiles
+const targetFleetShips = Array.from(document.querySelectorAll(".fleet-target .ship")).map(
   (ship) => Array.from(ship.querySelectorAll(".ship-tile")),
 );
 
@@ -21,8 +26,14 @@ const TILE_FLIP_STATE_SWAP_MS = TILE_FLIP_DURATION_MS / 2;
 let selectedTile = null;
 let activeMissShipIndex = null;
 
+// Filter for my ships that are alive
 function getAliveMineTiles(shipTiles) {
   return shipTiles.filter((tile) => tile.dataset.state === "alive");
+}
+
+// filter for target ships that are not found
+function getNotFoundTargetTiles(shipTiles) {
+  return shipTiles.filter((tile) => tile.dataset.state === "not-found");
 }
 
 // Choose random ship tile (for simulating lost life).
@@ -39,7 +50,7 @@ function getRandomAliveMineShipIndex() {
   return aliveShipIndexes[randomShipOffset];
 }
 
-// Set ship tile to lif-lost so visually is greyed out.
+// Set ship tile to life-lost so visually is greyed out.
 function removeMineShipLife() {
   if (activeMissShipIndex === null || getAliveMineTiles(mineFleetShips[activeMissShipIndex]).length === 0) {
     activeMissShipIndex = getRandomAliveMineShipIndex();
