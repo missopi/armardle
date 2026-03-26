@@ -4,13 +4,12 @@
   font-family: 'Montserrat', serif;
   font-size: 16px;
   --armadle-icon: url('../assets/armadle.svg');
-  --color-background: #8cacd3;
-  --settings-cog-color: #222222;
+  --color-background: #496a92;
+  --icon-color: #222222;
   --settings-surface-color: #ffffff;
   --settings-border-color: #d0d7de;
   --settings-text-color: #111111;
   --settings-hover-color: #f5f6f8;
-  --settings-cog-color: #222222;
 
   /* Spacing variables */
   --vertical-spacing-0-5: 4px;
@@ -69,7 +68,7 @@
   --settings-border-color: #34475a;
   --settings-text-color: #f0f3f8;
   --settings-hover-color: #253242;
-  --settings-cog-color: #f0f3f8;
+  --icon-color: #f0f3f8;
   --sm-btn-bg-color: #c65d6a;
   --sm-btn-border-color: #8e3f4b;
   --sm-btn-text-color: #f7f3f4;

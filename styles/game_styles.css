@@ -43,19 +43,27 @@ header {
   position: relative;
 }
 
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .back-button,
+.how-to-modal,
 .settings-menu {
   position: relative;
 }
 
 .back-button,
-.settings-cog-button {
+.settings-cog-button,
+.how-to-question-mark-button {
   width: 35px;
   height: 35px;
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: var(--settings-cog-color);
+  color: var(--icon-color);
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -74,7 +82,8 @@ header {
   stroke: currentColor;
 }
 
-.settings-cog-icon {
+.settings-cog-icon,
+.how-to-question-mark-icon {
   width: 25px;
   height: 25px;
   display: block;
@@ -82,16 +91,19 @@ header {
 
 /* Settings styles */
 
-:root[data-theme="dark"] .settings-cog-icon {
+:root[data-theme="dark"] .settings-cog-icon,
+:root[data-theme="dark"] .how-to-question-mark-icon {
   filter: brightness(0) invert(1);
 }
 
 .back-button:focus-visible,
-.settings-cog-button:focus-visible {
+.settings-cog-button:focus-visible,
+.how-to-question-mark-button:focus-visible {
   outline: 2px solid var(--settings-border-color);
   outline-offset: 2px;
 }
 
+.how-to-dropdown,
 .settings-dropdown {
   position: fixed;
   top: 50%;
@@ -186,9 +198,21 @@ header {
   text-align: left;
 }
 
+.how-to-dropdown h2,
 .settings-dropdown h2 {
   text-align: center;
   margin: 10px 12px 8px;
+}
+
+.modal-copy {
+  display: grid;
+  gap: 10px;
+  padding: 0 14px;
+  line-height: 1.45;
+}
+
+.modal-copy p {
+  margin: 0;
 }
 
 /* Game Board Styles */
