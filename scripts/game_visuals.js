@@ -288,7 +288,7 @@ function fireAtSelectedTile() {
 
   clearSelectedTile();
 }
-
+// Implement a fire shot without needing to select tile first
 function fireAtTile(tile) {
   if (!tile) {
     return;
@@ -385,10 +385,12 @@ function applyTheme(theme) {
   localStorage.setItem(THEME_STORAGE_KEY, theme);
 }
 
+// Ascertain if single shot is currently on
 function getSingleShotFirePreference() {
   return localStorage.getItem(SINGLE_SHOT_FIRE_STORAGE_KEY) === "true";
 }
 
+// Apply single shot mode
 function applySingleShotFirePreference(isEnabled) {
   isSingleShotFireEnabled = isEnabled;
   localStorage.setItem(SINGLE_SHOT_FIRE_STORAGE_KEY, String(isEnabled));
