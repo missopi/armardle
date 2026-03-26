@@ -476,6 +476,9 @@ function setupToolbarDialog({
     close() {
       setDialogState(false);
     },
+    open() {
+      setDialogState(true);
+    },
   };
 }
 
@@ -533,4 +536,6 @@ document.addEventListener("DOMContentLoaded", () => {
   howToControls = setupHowToModal(() => {
     settingsControls?.close();
   });
+
+  howToControls?.open();
 });
