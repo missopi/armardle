@@ -440,27 +440,41 @@ function setupToolbarDialog({
     return null;
   }
 
-  const setDialogState = (isOpen) => {
+  const syncModalOpenState = () => {
+    const hasOpenDialog = document.querySelector(
+      ".how-to-dropdown:not(.hidden), .settings-dropdown:not(.hidden)"
+    );
+    document.body.classList.toggle("modal-open", Boolean(hasOpenDialog));
+  };
+
+  const setDialogState = (isOpen, options = {}) => {
+    const { restoreFocus = true, trigger = null } = options;
+
     dialog.classList.toggle("hidden", !isOpen);
     button.setAttribute("aria-expanded", String(isOpen));
     dialog.setAttribute("aria-hidden", String(!isOpen));
+    syncModalOpenState();
 
     if (isOpen) {
-      lastTrigger = button;
+      lastTrigger = trigger;
       closeButton.focus();
       onOpen?.();
     } else {
       onClose?.();
 
-      if (lastTrigger === button) {
+      if (restoreFocus && lastTrigger === button) {
         button.focus();
       }
+
+      lastTrigger = null;
     }
   };
 
   button.addEventListener("click", () => {
     const isCurrentlyOpen = !dialog.classList.contains("hidden");
-    setDialogState(!isCurrentlyOpen);
+    setDialogState(!isCurrentlyOpen, {
+      trigger: !isCurrentlyOpen ? button : null,
+    });
   });
 
   closeButton.addEventListener("click", () => {
@@ -484,7 +498,9 @@ function setupToolbarDialog({
       setDialogState(false);
     },
     open() {
-      setDialogState(true);
+      setDialogState(true, {
+        restoreFocus: false,
+      });
     },
   };
 }

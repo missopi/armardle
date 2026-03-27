@@ -11,6 +11,11 @@ body {
   overflow-y: hidden;
 }
 
+body.modal-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 div {
   margin: 0;
   padding: 0;
@@ -119,6 +124,14 @@ header {
   padding: 12px 10px 22px;
   max-height: min(80dvh, 720px);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.how-to-dropdown::-webkit-scrollbar,
+.settings-dropdown::-webkit-scrollbar {
+  display: none;
 }
 
 .hidden {
