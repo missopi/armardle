@@ -326,7 +326,7 @@ header {
 .game-module {
   width: 100%;
   max-width: var(--game-max-width);
-  margin: 5px auto;
+  margin: 20px auto 5px;
   display: flex;
   flex-direction: column;
   min-height: calc(100dvh - var(--header-toolbar-height) - 10px);
@@ -335,8 +335,7 @@ header {
 .game-board-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  flex-grow: 1;
+  align-items: flex-start;
   overflow: hidden;
 }
 
