@@ -1,5 +1,7 @@
 const THEME_STORAGE_KEY = "armadle-game-theme";
 const SINGLE_SHOT_FIRE_STORAGE_KEY = "armadle-single-shot-fire";
+const DAILY_COMPLETION_KEY_PREFIX = "armadle:completed";
+let isDailyLockActive = false;
 
 const tiles = Array.from(document.querySelectorAll(".game-tile"));
 const gameBoard = document.querySelector(".game-board");
@@ -34,6 +36,128 @@ let selectedTile = null;
 let activeMissShipIndex = null;
 let hasHandledGameOver = false;
 let isSingleShotFireEnabled = false;
+
+function hasCompletedToday() {
+  return getSavedDailyState()?.completed === true;
+}
+
+function getDailyCompletionStorageKey(date = new Date()) {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  return `${DAILY_COMPLETION_KEY_PREFIX}:${year}-${month}-${day}`;
+}
+
+function getSavedDailyState() {
+  const completionKey = getDailyCompletionStorageKey();
+  const savedState = localStorage.getItem(completionKey);
+  if (!savedState) return null;
+
+  try {
+    return JSON.parse(savedState);
+  } catch (error) {
+    localStorage.removeItem(completionKey);
+    return null;
+  }
+}
+
+function getBoardSnapshot() {
+  return Array.from(document.querySelectorAll(".game-row")).map((row) =>
+    Array.from(row.querySelectorAll(".game-tile")).map((tile) => ({
+      state: tile.dataset.state,
+    })),
+  );
+}
+
+function getFleetSnapshot(fleetShips) {
+  return fleetShips.map((shipTiles) =>
+    shipTiles.map((tile) => ({
+      state: tile.dataset.state,
+    })),
+  );
+}
+
+function restoreBoardState() {
+  const savedState = getSavedDailyState();
+  if (!savedState?.rows) return;
+
+  const rows = Array.from(document.querySelectorAll(".game-row"));
+  firedTileIndexes.clear();
+
+  savedState.rows.forEach((savedRow, rowIndex) => {
+    const row = rows[rowIndex];
+    if (!row) return;
+
+    const tiles = Array.from(row.querySelectorAll(".game-tile"));
+    savedRow?.forEach((savedTile, tileIndex) => {
+      const tile = tiles[tileIndex];
+      if (!tile) return;
+
+      tile.dataset.state = savedTile?.state ?? "empty";
+      tile.setAttribute("aria-label", `Tile ${tileIndex + 1}, ${tile.dataset.state}`);
+
+      if (tile.dataset.state === "hit" || tile.dataset.state === "miss" || tile.dataset.state === "revealed") {
+        firedTileIndexes.add(tileIndex);
+        tile.setAttribute("aria-disabled", "true");
+        tile.setAttribute("tabindex", "-1");
+      } else {
+        tile.setAttribute("aria-disabled", "false");
+        tile.setAttribute("tabindex", "0");
+      }
+    });
+  });
+
+  savedState.mineFleet?.forEach((savedShip, shipIndex) => {
+    const shipTiles = mineFleetShips[shipIndex];
+    if (!shipTiles) return;
+
+    savedShip?.forEach((savedTile, tileIndex) => {
+      const tile = shipTiles[tileIndex];
+      if (!tile) return;
+
+      tile.dataset.state = savedTile?.state ?? "alive";
+    });
+  });
+
+  savedState.targetFleet?.forEach((savedShip, shipIndex) => {
+    const shipTiles = targetFleetShips[shipIndex];
+    if (!shipTiles) return;
+
+    savedShip?.forEach((savedTile, tileIndex) => {
+      const tile = shipTiles[tileIndex];
+      if (!tile) return;
+
+      tile.dataset.state = savedTile?.state ?? "not-found";
+    });
+  });
+}
+
+function applyDailyCompletionLock() {
+  if (!hasCompletedToday()) return false;
+
+  isDailyLockActive = true;
+  hasHandledGameOver = true;
+
+  const gameOverMessage = document.getElementById("game-status-message");
+  const gameActions = document.querySelector(".game-actions-container");
+  const gameActionsElementsToHide = document.querySelectorAll(
+    ".game-actions-container",
+  );
+
+  if (gameOverMessage) {
+    gameOverMessage.textContent = "You already completed today's game. Come back tomorrow.";
+  }
+
+  gameActions?.classList.add("game-over");
+  revealShareResults();
+  disableGameBoard();
+
+  gameActionsElementsToHide.forEach((element) => {
+    element.style.display = "none";
+  });
+
+  return true;
+}
 
 // Filter for my ships that are alive
 function getAliveMineTiles(shipTiles) {
@@ -198,6 +322,8 @@ function createStatusMessageLine(text, className) {
 }
 
 function onGameOver() {
+  isDailyLockActive = true;
+  
   if (hasHandledGameOver) {
     return;
   }
@@ -214,7 +340,18 @@ function onGameOver() {
     revealRemainingTargetLocations();
   }
 
-  disableGameBoard();
+  const savedState = getSavedDailyState();
+  localStorage.setItem(
+    getDailyCompletionStorageKey(),
+    JSON.stringify({
+      ...savedState,
+      completed: true,
+      rows: getBoardSnapshot(),
+      mineFleet: getFleetSnapshot(mineFleetShips),
+      targetFleet: getFleetSnapshot(targetFleetShips),
+    }),
+  );
+  disableGameBoard(); 
   updateGameOverMessage(outcome);
   revealShareResults();
 }
@@ -434,6 +571,9 @@ tiles.forEach((tile, index) => {
   });
 });
 
+restoreBoardState();
+applyDailyCompletionLock();
+
 if (isGameOver()) {
   onGameOver();
 }
@@ -631,5 +771,7 @@ document.addEventListener("DOMContentLoaded", () => {
     settingsControls?.close();
   });
 
-  howToControls?.open();
+  if (!hasCompletedToday()) {
+    howToControls?.open();
+  }
 });
