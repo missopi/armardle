@@ -313,7 +313,7 @@ header {
 .game-module {
   width: 100%;
   max-width: var(--game-max-width);
-  margin: 0 auto;
+  margin: 5px auto;
   display: flex;
   flex-direction: column;
   height: calc(100% - var(--header-toolbar-height));
@@ -344,7 +344,7 @@ header {
 }
 
 .game-status-message-primary {
-  font-size: 2rem;
+  font-size: 1.8rem;
 }
 
 .game-status-message-secondary {
@@ -582,4 +582,47 @@ header {
 
 .fleet-mine .ship > :first-child:nth-last-child(2) {
   grid-column: 3;
+}
+
+/* Share Button styles */
+
+.share-results-container {
+  margin-top: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.share-results-container.hidden {
+  display: none;
+}
+
+.share-results-feedback {
+  margin: 0;
+  min-height: 0.5rem;
+  font-size: 0.9rem;
+}
+
+#share-results-button {
+  background-color: var(--share-btn-color);
+  border-color: var(--share-border-color);
+  color: var(--text-btn-primary);
+}
+
+.share-button {
+  background: transparent;
+  border: 2px solid var(--sm-btn-border-color);
+  color: var(--sm-btn-text-color);
+  padding: 12px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.share-button:focus-visible,
+.settings-link-button:focus-visible,
+.settings-option input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--settings-border-color);
+  outline-offset: 2px;
 }

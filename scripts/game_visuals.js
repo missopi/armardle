@@ -24,6 +24,7 @@ const firedTileIndexes = new Set(); // Array to store shots fired tile indexes.
 const TILE_FLIP_DURATION_MS = 200;
 const TILE_FLIP_STATE_SWAP_MS = TILE_FLIP_DURATION_MS / 2;
 const gameStatusMessage = document.getElementById("game-status-message");
+const shareResultsContainer = document.getElementById("share-results-container");
 
 let selectedTile = null;
 let activeMissShipIndex = null;
@@ -117,6 +118,14 @@ function updateGameOverMessage(outcome) {
   );
 }
 
+function revealShareResults() {
+  if (!shareResultsContainer) {
+    return;
+  }
+
+  shareResultsContainer.classList.remove("hidden");
+}
+
 function createStatusMessageLine(text, className) {
   const messageLine = document.createElement("span");
   messageLine.className = className;
@@ -143,6 +152,7 @@ function onGameOver() {
 
   disableGameBoard();
   updateGameOverMessage(outcome);
+  revealShareResults();
 }
 
 function setupTargetFleetShipMappings() {
