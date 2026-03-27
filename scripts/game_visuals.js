@@ -440,6 +440,7 @@ function setupToolbarDialog({
     return null;
   }
 
+  // Open How-To modal on initial page opening
   const syncModalOpenState = () => {
     const hasOpenDialog = document.querySelector(
       ".how-to-dropdown:not(.hidden), .settings-dropdown:not(.hidden)"
