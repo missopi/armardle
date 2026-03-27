@@ -25,6 +25,10 @@ const TILE_FLIP_DURATION_MS = 200;
 const TILE_FLIP_STATE_SWAP_MS = TILE_FLIP_DURATION_MS / 2;
 const gameStatusMessage = document.getElementById("game-status-message");
 const shareResultsContainer = document.getElementById("share-results-container");
+const shareResultsButton = document.getElementById("share-results-button");
+const shareResultsFeedback = document.getElementById("share-results-feedback");
+const SHARE_FOUND_SYMBOL = "🟥";
+const SHARE_NOT_FOUND_SYMBOL = "⬜";
 
 let selectedTile = null;
 let activeMissShipIndex = null;
@@ -124,6 +128,45 @@ function revealShareResults() {
   }
 
   shareResultsContainer.classList.remove("hidden");
+}
+
+// Share results of target fleet to clipboard
+function getShareResultsText() {
+  const fleetRows = targetFleetShips
+    .map((shipTiles) =>
+      shipTiles
+        .map((tile) =>
+          tile.dataset.state === "found" ? SHARE_FOUND_SYMBOL : SHARE_NOT_FOUND_SYMBOL,
+        )
+        .join(""),
+    )
+    .join("\n");
+
+  return `Armadle\n${fleetRows}`;
+}
+
+function setShareResultsFeedback(message) {
+  if (!shareResultsFeedback) {
+    return;
+  }
+
+  shareResultsFeedback.textContent = message;
+}
+
+async function copyShareResults() {
+  const shareResultsText = getShareResultsText();
+
+  if (!navigator.clipboard?.writeText) {
+    setShareResultsFeedback("Clipboard not available.");
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(shareResultsText);
+    setShareResultsFeedback("Copied to clipboard.");
+  } catch (error) {
+    setShareResultsFeedback("Copy failed.");
+  }
 }
 
 function createStatusMessageLine(text, className) {
@@ -372,6 +415,12 @@ tiles.forEach((tile, index) => {
 
 if (isGameOver()) {
   onGameOver();
+}
+
+if (shareResultsButton) {
+  shareResultsButton.addEventListener("click", () => {
+    copyShareResults();
+  });
 }
 
 // Clicking away deselects tile
