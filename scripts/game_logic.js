@@ -2,7 +2,7 @@
 // Positions seeded from the date, they change once a day but stay the same for all players.
 const BOARD_ROWS = 7;
 const BOARD_COLUMNS = 7;
-const DAILY_GROUP_SIZES = [2, 2, 3, 4]; // Ship sizes.
+const DAILY_GROUP_SIZES = [2, 3, 3, 4]; // Ship sizes.
 
 // Get a string key in the format "YYYY-MM-DD".
 function getDateKey(date = new Date()) {
